@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import QDockWidget, QFileSystemModel, QTreeView, QLineEdit, QWidget, QVBoxLayout, QHeaderView
-from PyQt5.QtCore import QDir
+from PyQt5.QtCore import QUrl
+from PyQt5.QtGui import QDesktopServices
 
 class DirectoryPane(QDockWidget):
     def __init__(self, parent):
@@ -17,6 +18,7 @@ class DirectoryPane(QDockWidget):
         self.tree.setModel(self.model)
         self.tree.setRootIndex(self.model.index('/Users/mozzo/Desktop'))
         self.tree.header().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.tree.doubleClicked.connect(self.item_clicked)
                 
         self.tree.setAnimated(True) # Closing folder animation
         self.tree.setIndentation(20)
@@ -35,3 +37,5 @@ class DirectoryPane(QDockWidget):
     def search_enter(self):
         self.tree.setRootIndex(self.model.index(self.search_input.text()))
         
+    def item_clicked(self, event):
+        QDesktopServices.openUrl(QUrl.fromLocalFile(self.model.filePath(event)))
