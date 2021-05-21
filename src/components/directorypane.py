@@ -40,6 +40,7 @@ class DirectoryPane(QDockWidget):
         self.layout.addWidget(self.tree)
         self.main_widget.setLayout(self.layout)
         self.setWidget(self.main_widget)
+        self.tree.sortByColumn(0, 0)
 
     def search_enter(self):
         self.tree.setRootIndex(self.model.index(self.search_input.text()))
