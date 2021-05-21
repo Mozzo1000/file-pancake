@@ -44,14 +44,16 @@ class DirectoryPane(QDockWidget):
 
     def search_enter(self):
         self.tree.setRootIndex(self.model.index(self.search_input.text()))
-        
-    def item_clicked(self, event):
-        file_name = self.model.filePath(event)
+
+    def run_or_open(self, file_name):
         if os.path.isfile(file_name) or file_name.endswith('.app'):
             QDesktopServices.openUrl(QUrl.fromLocalFile(file_name))
         elif os.path.isdir(file_name):
             self.tree.setRootIndex(self.model.index(file_name))
             self.search_input.setText(file_name)
+        
+    def item_clicked(self, event):
+        self.run_or_open(self.model.filePath(event))
 
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_Backspace:
@@ -59,5 +61,4 @@ class DirectoryPane(QDockWidget):
             self.search_input.setText(self.model.filePath(self.tree.rootIndex()))
         if e.key() == Qt.Key_Return:
             if self.tree.selectionModel().selectedIndexes():
-                self.tree.setRootIndex(self.tree.selectionModel().selectedIndexes()[0])
-                self.search_input.setText(self.model.filePath(self.tree.selectionModel().selectedIndexes()[0]))
+                self.run_or_open(self.model.filePath(self.tree.selectionModel().selectedIndexes()[0]))
