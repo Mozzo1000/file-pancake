@@ -53,3 +53,6 @@ class DirectoryPane(QDockWidget):
         if e.key() == Qt.Key_Backspace:
             self.tree.setRootIndex(self.tree.rootIndex().parent())
             self.search_input.setText(self.model.filePath(self.tree.rootIndex()))
+        if e.key() == Qt.Key_Return:
+            self.tree.setRootIndex(self.tree.selectionModel().selectedIndexes()[0])
+            self.search_input.setText(self.model.filePath(self.tree.selectionModel().selectedIndexes()[0]))
