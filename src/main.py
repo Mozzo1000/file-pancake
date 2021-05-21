@@ -1,6 +1,7 @@
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, qApp, QMenu, QAction
+from PyQt5.QtWidgets import QMainWindow, QApplication, QShortcut, qApp, QMenu, QAction
 from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QKeySequence
 from components.directorypane import DirectoryPane
 
 class Gui(QMainWindow):
@@ -27,6 +28,7 @@ class Gui(QMainWindow):
 
         new_explorer_window_action = QAction('&New pane window', self)
         new_explorer_window_action.triggered.connect(self.new_explorer_window)
+        new_explorer_window_action.setShortcut(QKeySequence('CTRL+N'))
 
 
         file_menu.addAction(exit_action)
