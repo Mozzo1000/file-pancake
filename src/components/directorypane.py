@@ -19,7 +19,10 @@ class DirectoryPane(QDockWidget):
         self.tree = QTreeView()
         self.tree.setModel(self.model)
         self.tree.setRootIndex(self.model.index(QDir.homePath()))
-        self.tree.header().setSectionResizeMode(QHeaderView.ResizeToContents)
+        self.tree.header().setStretchLastSection(False)
+        self.tree.header().setSectionResizeMode(QHeaderView.Interactive)
+        self.tree.header().setSectionResizeMode(0, QHeaderView.Stretch)
+        self.tree.setSortingEnabled(True)
         self.tree.doubleClicked.connect(self.item_clicked)
                 
         self.tree.setAnimated(True) # Closing folder animation
