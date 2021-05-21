@@ -8,7 +8,6 @@ class DirectoryPane(QDockWidget):
     def __init__(self, parent):
         super().__init__()
         self.parent = parent
-        self.setWindowTitle('Explorer')
 
         self.main_widget = QWidget()
         self.layout = QVBoxLayout()

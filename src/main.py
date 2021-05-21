@@ -25,7 +25,7 @@ class Gui(QMainWindow):
         exit_action = QAction('&Exit', self)
         exit_action.triggered.connect(self.close)
 
-        new_explorer_window_action = QAction('&New explorer', self)
+        new_explorer_window_action = QAction('&New pane window', self)
         new_explorer_window_action.triggered.connect(self.new_explorer_window)
 
 
