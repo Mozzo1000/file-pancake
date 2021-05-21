@@ -34,7 +34,7 @@ class DirectoryPane(QDockWidget):
         self.search_input = QLineEdit()
         self.search_input.setText(QDir.homePath())
         self.search_input.returnPressed.connect(self.search_enter)
-        self.search_input.setFocusPolicy(Qt.NoFocus)
+        self.search_input.setFocusPolicy(Qt.ClickFocus)
 
         self.layout.addWidget(self.search_input)
         self.layout.addWidget(self.tree)
@@ -58,5 +58,6 @@ class DirectoryPane(QDockWidget):
             self.tree.setRootIndex(self.tree.rootIndex().parent())
             self.search_input.setText(self.model.filePath(self.tree.rootIndex()))
         if e.key() == Qt.Key_Return:
-            self.tree.setRootIndex(self.tree.selectionModel().selectedIndexes()[0])
-            self.search_input.setText(self.model.filePath(self.tree.selectionModel().selectedIndexes()[0]))
+            if self.tree.selectionModel().selectedIndexes():
+                self.tree.setRootIndex(self.tree.selectionModel().selectedIndexes()[0])
+                self.search_input.setText(self.model.filePath(self.tree.selectionModel().selectedIndexes()[0]))
