@@ -74,6 +74,7 @@ class DirectoryPane(QDockWidget):
         if self.tree.indexAt(event).data():
             open_action = contextMenu.addAction('Open')
             delete_action = contextMenu.addAction('Delete')
+            contextMenu.addSeparator()
             properties_action = contextMenu.addAction('Properties')
             action = contextMenu.exec_(self.tree.mapToGlobal(event))
             if action is not None:
