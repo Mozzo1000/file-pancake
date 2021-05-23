@@ -1,9 +1,11 @@
-from PyQt5.QtWidgets import QDockWidget, QFileSystemModel, QTreeView, QLineEdit, QWidget, QVBoxLayout, QHeaderView, QMenu, QTreeWidget
+from PyQt5.QtWidgets import QDockWidget, QFileSystemModel, QTreeView, QLineEdit, QWidget, QVBoxLayout, QHeaderView, QMenu, QTreeWidget, QMessageBox
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
 from PyQt5.QtCore import Qt, QDir, QSortFilterProxyModel
 import os
 from ui.dialog import CreateFolderDialog
+from send2trash import send2trash
+
 
 class DirectoryPane(QDockWidget):
     def __init__(self, parent):
@@ -67,10 +69,23 @@ class DirectoryPane(QDockWidget):
     
 
     def customContextMenuEvent(self, event):
+        contextMenu = QMenu(self)
         if self.tree.indexAt(event).data():
-            pass
+            delete_action = contextMenu.addAction('Delete')
+            action = contextMenu.exec_(self.tree.mapToGlobal(event))
+            if action is not None:
+                if action == delete_action:
+                    file_for_deletion = self.model.filePath(self.tree.indexAt(event))
+                    question = QMessageBox.question(self, '', f'Do you really want to delete {file_for_deletion}', QMessageBox.Yes | QMessageBox.No)
+                    if question == QMessageBox.Yes:
+                        try:
+                            send2trash(QDir.toNativeSeparators(file_for_deletion))
+                            print(f'Deleted file {file_for_deletion}')
+                        except send2trash.TrashPermissionError:
+                            QMessageBox.warning(self, '', f'Permission error, unable to delete {file_for_deletion}')
+                        except OSError:
+                            QMessageBox.warning(self, '', f'Unkown error occurred, unable to delete {file_for_deletion}')
         else:
-            contextMenu = QMenu(self)
             new_folder_action = contextMenu.addAction("New folder")
             action = contextMenu.exec_(self.tree.mapToGlobal(event))
             if action is not None:
