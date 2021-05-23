@@ -1,8 +1,9 @@
-from PyQt5.QtWidgets import QDockWidget, QFileSystemModel, QTreeView, QLineEdit, QWidget, QVBoxLayout, QHeaderView
+from PyQt5.QtWidgets import QDockWidget, QFileSystemModel, QTreeView, QLineEdit, QWidget, QVBoxLayout, QHeaderView, QMenu, QTreeWidget
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices
-from PyQt5.QtCore import Qt, QDir
+from PyQt5.QtCore import Qt, QDir, QSortFilterProxyModel
 import os
+from ui.dialog import CreateFolderDialog
 
 class DirectoryPane(QDockWidget):
     def __init__(self, parent):
@@ -29,6 +30,8 @@ class DirectoryPane(QDockWidget):
         self.tree.setAlternatingRowColors(True)
         self.tree.setRootIsDecorated(False)
         self.tree.setExpandsOnDoubleClick(False)
+        self.tree.setContextMenuPolicy(Qt.CustomContextMenu)  
+        self.tree.customContextMenuRequested.connect(self.customContextMenuEvent)  
 
         self.search_input = QLineEdit()
         self.search_input.setText(QDir.homePath())
@@ -61,3 +64,17 @@ class DirectoryPane(QDockWidget):
         if e.key() == Qt.Key_Return:
             if self.tree.selectionModel().selectedIndexes():
                 self.run_or_open(self.model.filePath(self.tree.selectionModel().selectedIndexes()[0]))
+    
+
+    def customContextMenuEvent(self, event):
+        if self.tree.indexAt(event).data():
+            pass
+        else:
+            contextMenu = QMenu(self)
+            new_folder_action = contextMenu.addAction("New folder")
+            action = contextMenu.exec_(self.tree.mapToGlobal(event))
+            if action is not None:
+                if action == new_folder_action:
+                    dialog = CreateFolderDialog(self, self.search_input.text())
+                    dialog.show()
+
