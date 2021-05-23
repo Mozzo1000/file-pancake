@@ -5,6 +5,7 @@ from PyQt5.QtCore import Qt, QDir, QSortFilterProxyModel
 import os
 from ui.dialog import CreateFolderDialog
 from send2trash import send2trash
+from lib.properties import Properties
 
 
 class DirectoryPane(QDockWidget):
@@ -73,6 +74,7 @@ class DirectoryPane(QDockWidget):
         if self.tree.indexAt(event).data():
             open_action = contextMenu.addAction('Open')
             delete_action = contextMenu.addAction('Delete')
+            properties_action = contextMenu.addAction('Properties')
             action = contextMenu.exec_(self.tree.mapToGlobal(event))
             if action is not None:
                 if action == delete_action:
@@ -88,6 +90,9 @@ class DirectoryPane(QDockWidget):
                             QMessageBox.warning(self, '', f'Unkown error occurred, unable to delete {file_for_deletion}')
                 if action == open_action:
                     self.run_or_open(self.model.filePath(self.tree.indexAt(event)))
+                if action == properties_action:
+                    properties_window = Properties(self, QDir.toNativeSeparators(self.model.filePath(self.tree.indexAt(event))))
+                    properties_window.open_window()
         else:
             new_folder_action = contextMenu.addAction("New folder")
             action = contextMenu.exec_(self.tree.mapToGlobal(event))
