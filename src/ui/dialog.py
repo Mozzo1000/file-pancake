@@ -6,7 +6,7 @@ import os
 class CreateFolderDialog(QMainWindow):
     def __init__(self, parent, dir):
         super().__init__(parent)
-        self.setWindowFlags(Qt.Window | Qt.Window | Qt.WindowStaysOnTopHint)
+        self.setWindowFlags(Qt.Window | Qt.CustomizeWindowHint | Qt.WindowStaysOnTopHint)
         self.setFixedHeight(110)
         self.setMinimumWidth(350)
         self.dir = dir
