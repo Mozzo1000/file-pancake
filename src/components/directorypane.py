@@ -71,6 +71,7 @@ class DirectoryPane(QDockWidget):
     def customContextMenuEvent(self, event):
         contextMenu = QMenu(self)
         if self.tree.indexAt(event).data():
+            open_action = contextMenu.addAction('Open')
             delete_action = contextMenu.addAction('Delete')
             action = contextMenu.exec_(self.tree.mapToGlobal(event))
             if action is not None:
@@ -85,6 +86,8 @@ class DirectoryPane(QDockWidget):
                             QMessageBox.warning(self, '', f'Permission error, unable to delete {file_for_deletion}')
                         except OSError:
                             QMessageBox.warning(self, '', f'Unkown error occurred, unable to delete {file_for_deletion}')
+                if action == open_action:
+                    self.run_or_open(self.model.filePath(self.tree.indexAt(event)))
         else:
             new_folder_action = contextMenu.addAction("New folder")
             action = contextMenu.exec_(self.tree.mapToGlobal(event))
