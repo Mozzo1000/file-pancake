@@ -9,9 +9,10 @@ from lib.properties import Properties
 
 
 class DirectoryPane(QDockWidget):
-    def __init__(self, parent):
+    def __init__(self, parent, history):
         super().__init__()
         self.parent = parent
+        self.history = history
 
         self.main_widget = QWidget()
         self.layout = QVBoxLayout()
@@ -56,6 +57,7 @@ class DirectoryPane(QDockWidget):
         elif os.path.isdir(file_name):
             self.tree.setRootIndex(self.model.index(file_name))
             self.search_input.setText(file_name)
+            self.history.add_visit(self.model.filePath(self.model.index(file_name)))
         
     def item_clicked(self, event):
         self.run_or_open(self.model.filePath(event))

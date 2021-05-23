@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QMainWindow, QApplication, QShortcut, qApp, QMenu, Q
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QKeySequence
 from components.directorypane import DirectoryPane
+from history import History
 
 class Gui(QMainWindow):
     def __init__(self):
@@ -10,7 +11,9 @@ class Gui(QMainWindow):
         self.resize(800, 600)
         self.setWindowTitle('Pancake')
 
-        directory_pane = DirectoryPane(self)
+        self.history = History()
+
+        directory_pane = DirectoryPane(self, self.history)
         self.addDockWidget(Qt.LeftDockWidgetArea, directory_pane)
 
         self.create_menu()
@@ -42,6 +45,8 @@ class Gui(QMainWindow):
         directory_pane = DirectoryPane(self)
         self.addDockWidget(Qt.RightDockWidgetArea, directory_pane)
 
+    def closeEvent(self, event):
+        self.history.save()
 
 
 if __name__ == '__main__':
