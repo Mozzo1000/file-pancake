@@ -17,6 +17,7 @@ class CreateFolderDialog(QMainWindow):
         label = QLabel('New folder')
         self.dir_input = QLineEdit()
         self.dir_input.textChanged.connect(self.set_button_status)
+        self.dir_input.returnPressed.connect(self.create_dir)
 
         cancel_button = QPushButton('Cancel')
         cancel_button.clicked.connect(self.close)
@@ -24,6 +25,8 @@ class CreateFolderDialog(QMainWindow):
         self.create_button = QPushButton('Create')
         self.create_button.clicked.connect(self.create_dir)
         self.create_button.setDisabled(True)
+        self.create_button.setAutoDefault(True)
+        self.create_button.setDefault(True)
 
         layout.addWidget(label)
         layout.addWidget(self.dir_input)
