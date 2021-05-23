@@ -1,5 +1,6 @@
 import sys
-from lib.platform.properties_win import open_property_window_win
+if sys.platform == 'win32':
+    from lib.platform.properties_win import open_property_window_win
 from PyQt5.QtWidgets import QMessageBox
 
 class Properties():
