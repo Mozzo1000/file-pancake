@@ -1,11 +1,12 @@
-from PyQt5.QtWidgets import QDockWidget, QFileSystemModel, QTreeView, QLineEdit, QWidget, QVBoxLayout, QHeaderView, QMenu, QTreeWidget, QMessageBox
+from PyQt5.QtWidgets import QDockWidget, QFileSystemModel, QTreeView, QLineEdit, QWidget, QVBoxLayout, QHeaderView, QMenu, QTreeWidget, QMessageBox, QShortcut
 from PyQt5.QtCore import QUrl
-from PyQt5.QtGui import QDesktopServices
+from PyQt5.QtGui import QDesktopServices, QKeySequence
 from PyQt5.QtCore import Qt, QDir, QSortFilterProxyModel
 import os
 from ui.dialog import CreateFolderDialog
 from send2trash import send2trash
 from lib.properties import Properties
+from ui.changedir import ChangeDirWindow
 
 
 class DirectoryPane(QDockWidget):
@@ -47,6 +48,9 @@ class DirectoryPane(QDockWidget):
         self.main_widget.setLayout(self.layout)
         self.setWidget(self.main_widget)
         self.tree.sortByColumn(0, 0)
+
+        open_change_dir_window_action = QShortcut(QKeySequence('Ctrl+P'), self)
+        open_change_dir_window_action.activated.connect(self.open_change_dir_window)
 
     def search_enter(self):
         self.tree.setRootIndex(self.model.index(self.search_input.text()))
@@ -103,4 +107,9 @@ class DirectoryPane(QDockWidget):
                 if action == new_folder_action:
                     dialog = CreateFolderDialog(self, self.search_input.text())
                     dialog.show()
+
+    def open_change_dir_window(self):
+        change_dir_window = ChangeDirWindow(self, self.history.global_history['history'])
+        change_dir_window.show()
+
 
