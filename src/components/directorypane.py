@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QDockWidget, QFileSystemModel, QTreeView, QLineEdit, QWidget, QVBoxLayout, QHeaderView, QMenu, QTreeWidget, QMessageBox, QShortcut
+from PyQt5.QtWidgets import QDockWidget, QFileSystemModel, QTreeView, QLineEdit, QWidget, QVBoxLayout, QHeaderView, QMenu, QTreeWidget, QMessageBox, QShortcut, QCompleter
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices, QKeySequence
 from PyQt5.QtCore import Qt, QDir, QSortFilterProxyModel
@@ -42,6 +42,9 @@ class DirectoryPane(QDockWidget):
         self.search_input.setText(QDir.homePath())
         self.search_input.returnPressed.connect(self.search_enter)
         self.search_input.setFocusPolicy(Qt.ClickFocus)
+        completer = QCompleter()
+        completer.setModel(self.model)
+        self.search_input.setCompleter(completer)
 
         self.layout.addWidget(self.search_input)
         self.layout.addWidget(self.tree)
