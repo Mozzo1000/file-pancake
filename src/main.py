@@ -42,7 +42,7 @@ class Gui(QMainWindow):
         menu_bar.addMenu(window_menu)
 
     def new_explorer_window(self):
-        directory_pane = DirectoryPane(self)
+        directory_pane = DirectoryPane(self, self.history)
         self.addDockWidget(Qt.RightDockWidgetArea, directory_pane)
 
     def closeEvent(self, event):
