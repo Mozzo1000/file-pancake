@@ -27,8 +27,9 @@ class Preview():
             file_full_path (str): File path including filename and extension
         """
         file_info = QFileInfo(file_full_path)
-        previewer = self.lookup_preview_from_ext(file_info.completeSuffix())()
+        previewer = self.lookup_preview_from_ext(file_info.completeSuffix())
         if previewer:
+            previewer = previewer()
             previewer.set_file(file_full_path)
             parent_window.addDockWidget(Qt.RightDockWidgetArea, previewer)
         else:
