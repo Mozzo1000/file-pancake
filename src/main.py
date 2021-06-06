@@ -4,6 +4,8 @@ from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QKeySequence
 from components.directorypane import DirectoryPane
 from history import History
+from preview import Preview
+from components.text_preview import TextPreview
 
 class Gui(QMainWindow):
     def __init__(self):
@@ -12,6 +14,8 @@ class Gui(QMainWindow):
         self.setWindowTitle('Pancake')
 
         self.history = History()
+        self.preview = Preview()
+        self.preview.register_preview(TextPreview())
 
         directory_pane = DirectoryPane(self, self.history)
         self.addDockWidget(Qt.LeftDockWidgetArea, directory_pane)
