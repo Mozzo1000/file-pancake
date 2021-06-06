@@ -10,10 +10,11 @@ from ui.changedir import ChangeDirWindow
 
 
 class DirectoryPane(QDockWidget):
-    def __init__(self, parent, history):
+    def __init__(self, parent, history, preview):
         super().__init__()
         self.parent = parent
         self.history = history
+        self.preview = preview
 
         self.main_widget = QWidget()
         self.layout = QVBoxLayout()
@@ -82,6 +83,7 @@ class DirectoryPane(QDockWidget):
         contextMenu = QMenu(self)
         if self.tree.indexAt(event).data():
             open_action = contextMenu.addAction('Open')
+            preview_action = contextMenu.addAction('Preview')
             delete_action = contextMenu.addAction('Delete')
             contextMenu.addSeparator()
             properties_action = contextMenu.addAction('Properties')
@@ -103,6 +105,8 @@ class DirectoryPane(QDockWidget):
                 if action == properties_action:
                     properties_window = Properties(self, QDir.toNativeSeparators(self.model.filePath(self.tree.indexAt(event))))
                     properties_window.open_window()
+                if action == preview_action:
+                    self.preview.open_preview_window(self.parent, self.model.filePath(self.tree.indexAt(event)))
         else:
             new_folder_action = contextMenu.addAction("New folder")
             action = contextMenu.exec_(self.tree.mapToGlobal(event))

@@ -17,7 +17,7 @@ class Gui(QMainWindow):
         self.preview = Preview()
         self.preview.register_preview(TextPreview())
 
-        directory_pane = DirectoryPane(self, self.history)
+        directory_pane = DirectoryPane(self, self.history, self.preview)
         self.addDockWidget(Qt.LeftDockWidgetArea, directory_pane)
 
         self.create_menu()
@@ -46,7 +46,7 @@ class Gui(QMainWindow):
         menu_bar.addMenu(window_menu)
 
     def new_explorer_window(self):
-        directory_pane = DirectoryPane(self, self.history)
+        directory_pane = DirectoryPane(self, self.history, self.preview)
         self.addDockWidget(Qt.RightDockWidgetArea, directory_pane)
 
     def closeEvent(self, event):
