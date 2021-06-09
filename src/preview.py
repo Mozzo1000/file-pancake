@@ -51,3 +51,6 @@ class Preview():
         else:
             # A registered preview class can not be found, return None
             return None
+
+    def get_extensions(self):
+        return list(self.preview_classes.keys())
