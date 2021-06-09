@@ -13,7 +13,7 @@ class TextPreview(PreviewBase):
         scrollArea.setWidget(self.label)
         scrollArea.setVisible(True)
 
-        self.setWidget(scrollArea)
+        self.base.addWidget(scrollArea)
     
     def set_file(self, file_full_path):
         super().set_file(file_full_path)
