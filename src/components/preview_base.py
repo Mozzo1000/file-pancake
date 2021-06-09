@@ -13,13 +13,13 @@ class PreviewBase(QDockWidget):
         base_widget = QWidget(self)
         self.base = QVBoxLayout(base_widget)
 
-        toolbar = QToolBar(inner_window)
+        self.toolbar = QToolBar(inner_window)
 
         open = QAction("Open", self)
         open.triggered.connect(self.open_file)
-        toolbar.addAction(open)
+        self.toolbar.addAction(open)
 
-        inner_window.addToolBar(toolbar)
+        inner_window.addToolBar(self.toolbar)
         self.setWidget(inner_window)
         inner_window.setCentralWidget(base_widget)
 
@@ -43,3 +43,6 @@ class PreviewBase(QDockWidget):
             return self.file_full_path
         else:
             QMessageBox.warning(self, 'Preview', 'Internal error occurred. File path not set in preview')
+
+    def disable_toolbar(self):
+        self.toolbar.hide()
