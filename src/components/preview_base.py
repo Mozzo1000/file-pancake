@@ -7,21 +7,21 @@ class PreviewBase(QDockWidget):
         super().__init__()
         # List of file extensions allowed to use the preview window, write extension without leading dot.
         self.allowed_file_types = []
-        self.file_full_path = None
-        inner_window = QMainWindow(self)
-        inner_window.setWindowFlags(Qt.Widget)
-        base_widget = QWidget(self)
-        self.base = QVBoxLayout(base_widget)
+        self._file_full_path = None
+        _inner_window = QMainWindow(self)
+        _inner_window.setWindowFlags(Qt.Widget)
+        _base_widget = QWidget(self)
+        self.base = QVBoxLayout(_base_widget)
 
-        self.toolbar = QToolBar(inner_window)
+        self._toolbar = QToolBar(_inner_window)
 
-        open = QAction("Open", self)
-        open.triggered.connect(self.open_file)
-        self.toolbar.addAction(open)
+        _open = QAction("Open", self)
+        _open.triggered.connect(self.open_file)
+        self._toolbar.addAction(_open)
 
-        inner_window.addToolBar(self.toolbar)
-        self.setWidget(inner_window)
-        inner_window.setCentralWidget(base_widget)
+        _inner_window.addToolBar(self._toolbar)
+        self.setWidget(_inner_window)
+        _inner_window.setCentralWidget(_base_widget)
 
     def open_file(self):
         QDesktopServices.openUrl(QUrl.fromLocalFile(self.get_file_full_path()))
@@ -35,14 +35,14 @@ class PreviewBase(QDockWidget):
         return self.allowed_file_types
 
     def set_file(self, file_full_path):
-        self.file_full_path = file_full_path
+        self._file_full_path = file_full_path
         self.setWindowTitle(f'Preview - {file_full_path}')
 
     def get_file_full_path(self):
-        if self.file_full_path:
-            return self.file_full_path
+        if self._file_full_path:
+            return self._file_full_path
         else:
             QMessageBox.warning(self, 'Preview', 'Internal error occurred. File path not set in preview')
 
     def disable_toolbar(self):
-        self.toolbar.hide()
+        self._toolbar.hide()
