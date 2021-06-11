@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QDockWidget, QFileSystemModel, QTreeView, QLineEdit, QWidget, QVBoxLayout, QHeaderView, QMenu, QTreeWidget, QMessageBox, QShortcut, QCompleter
+from PyQt5.QtWidgets import QDockWidget, QFileSystemModel, QLabel, QTreeView, QLineEdit, QWidget, QVBoxLayout, QHeaderView, QMenu, QTreeWidget, QMessageBox, QShortcut, QCompleter, QStatusBar
 from PyQt5.QtCore import QUrl
 from PyQt5.QtGui import QDesktopServices, QKeySequence
 from PyQt5.QtCore import Qt, QDir, QSortFilterProxyModel
@@ -7,7 +7,7 @@ from ui.dialog import CreateFolderDialog
 from send2trash import send2trash
 from lib.properties import Properties
 from ui.changedir import ChangeDirWindow
-
+from components.drive_size import DriveSize
 
 class DirectoryPane(QDockWidget):
     def __init__(self, parent, history, preview):
@@ -47,8 +47,15 @@ class DirectoryPane(QDockWidget):
         completer.setModel(self.model)
         self.search_input.setCompleter(completer)
 
+        status = QStatusBar(self)
+        status.setSizeGripEnabled(False)
+        status.setStyleSheet("background-color: rgb(236,236,236);")
+        self.drive_size_widget = DriveSize(self.get_current_dir())
+        status.addPermanentWidget(self.drive_size_widget)
+
         self.layout.addWidget(self.search_input)
         self.layout.addWidget(self.tree)
+        self.layout.addWidget(status)
         self.main_widget.setLayout(self.layout)
         self.setWidget(self.main_widget)
         self.tree.sortByColumn(0, 0)
@@ -69,6 +76,7 @@ class DirectoryPane(QDockWidget):
             self.search_input.setText(file_name)
             self.history.add_visit(self.model.filePath(self.model.index(file_name)))
             self.setWindowTitle(QDir(self.get_current_dir()).dirName())
+            self.drive_size_widget.update_path(self.get_current_dir())
         
     def item_clicked(self, event):
         self.run_or_open(self.model.filePath(event))
@@ -78,6 +86,7 @@ class DirectoryPane(QDockWidget):
             self.tree.setRootIndex(self.tree.rootIndex().parent())
             self.search_input.setText(self.model.filePath(self.tree.rootIndex()))
             self.setWindowTitle(QDir(self.get_current_dir()).dirName())
+            self.drive_size_widget.update_path(self.get_current_dir())
         if e.key() == Qt.Key_Return:
             if self.tree.selectionModel().selectedIndexes():
                 self.run_or_open(self.model.filePath(self.tree.selectionModel().selectedIndexes()[0]))
@@ -123,4 +132,5 @@ class DirectoryPane(QDockWidget):
         change_dir_window = ChangeDirWindow(self, self.history.global_history['history'])
         change_dir_window.show()
 
-
+    def get_current_dir(self):
+        return self.model.filePath(self.tree.rootIndex())
