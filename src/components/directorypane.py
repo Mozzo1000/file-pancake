@@ -55,6 +55,8 @@ class DirectoryPane(QDockWidget):
 
         open_change_dir_window_action = QShortcut(QKeySequence('Ctrl+P'), self)
         open_change_dir_window_action.activated.connect(self.open_change_dir_window)
+        self.setWindowTitle(QDir(self.get_current_dir()).dirName())
+
 
     def search_enter(self):
         self.tree.setRootIndex(self.model.index(self.search_input.text()))
@@ -66,6 +68,7 @@ class DirectoryPane(QDockWidget):
             self.tree.setRootIndex(self.model.index(file_name))
             self.search_input.setText(file_name)
             self.history.add_visit(self.model.filePath(self.model.index(file_name)))
+            self.setWindowTitle(QDir(self.get_current_dir()).dirName())
         
     def item_clicked(self, event):
         self.run_or_open(self.model.filePath(event))
@@ -74,6 +77,7 @@ class DirectoryPane(QDockWidget):
         if e.key() == Qt.Key_Backspace:
             self.tree.setRootIndex(self.tree.rootIndex().parent())
             self.search_input.setText(self.model.filePath(self.tree.rootIndex()))
+            self.setWindowTitle(QDir(self.get_current_dir()).dirName())
         if e.key() == Qt.Key_Return:
             if self.tree.selectionModel().selectedIndexes():
                 self.run_or_open(self.model.filePath(self.tree.selectionModel().selectedIndexes()[0]))
