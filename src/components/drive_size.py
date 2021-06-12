@@ -7,7 +7,7 @@ class DriveSize(QLabel):
         super().__init__()
         self.path = path
         
-        self.get_harddrive_space(5)
+        self.get_harddrive_space()
 
     # Note: generally it would be better for the thread to be started globally and not
     # on a per class basis. This class will possibly be invoked multiple times in a single
