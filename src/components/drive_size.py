@@ -7,7 +7,7 @@ class DriveSize(QLabel):
         super().__init__()
         self.path = path
         
-        self.get_harddrive_space()
+        self.get_harddrive_space(5)
 
     # Note: generally it would be better for the thread to be started globally and not
     # on a per class basis. This class will possibly be invoked multiple times in a single
@@ -21,8 +21,11 @@ class DriveSize(QLabel):
         thread = Timer(interval, self.get_harddrive_space, [interval])
         thread.daemon = True
         thread.start()
-        total, used, free = shutil.disk_usage(self.path)
-        self.setText(f"Free: {(free // (2**30))} GiB of {(total // (2**30))} GiB")
+        try:
+            total, used, free = shutil.disk_usage(self.path)
+            self.setText(f"Free: {(free // (2**30))} GiB of {(total // (2**30))} GiB")
+        except FileNotFoundError:
+            self.setText("Failed to retrieve harddrive usage")
 
     def update_path(self, new_path):
         self.path = new_path
