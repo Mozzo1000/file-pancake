@@ -6,6 +6,7 @@ from components.directorypane import DirectoryPane
 from history import History
 from preview import Preview
 from components.text_preview import TextPreview
+from ui.settings import SettingsWindow
 
 class Gui(QMainWindow):
     def __init__(self):
@@ -30,6 +31,10 @@ class Gui(QMainWindow):
         file_menu = QMenu('&File', self)
         window_menu = QMenu('&Window', self)
 
+        open_settings_action = QAction('&Settings', self)
+        open_settings_action.setStatusTip('Open settings')
+        open_settings_action.triggered.connect(self.open_settings)
+
         exit_action = QAction('&Exit', self)
         exit_action.triggered.connect(self.close)
 
@@ -37,10 +42,9 @@ class Gui(QMainWindow):
         new_explorer_window_action.triggered.connect(self.new_explorer_window)
         new_explorer_window_action.setShortcut(QKeySequence('CTRL+N'))
 
-
+        file_menu.addAction(open_settings_action)
         file_menu.addAction(exit_action)
         window_menu.addAction(new_explorer_window_action)
-
 
         menu_bar.addMenu(file_menu)
         menu_bar.addMenu(window_menu)
@@ -51,6 +55,10 @@ class Gui(QMainWindow):
 
     def closeEvent(self, event):
         self.history.save()
+    
+    def open_settings(self):
+        settings = SettingsWindow(self)
+        settings.show()
 
 
 if __name__ == '__main__':
