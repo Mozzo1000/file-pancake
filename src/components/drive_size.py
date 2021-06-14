@@ -1,3 +1,4 @@
+from PyQt5.QtCore import QSettings
 from PyQt5.QtWidgets import QLabel
 from threading import Timer
 import shutil
@@ -7,7 +8,7 @@ class DriveSize(QLabel):
         super().__init__()
         self.path = path
         
-        self.get_harddrive_space()
+        self.get_harddrive_space(QSettings('pancake', 'app').value('harddrive_update_interval'))
 
     # Note: generally it would be better for the thread to be started globally and not
     # on a per class basis. This class will possibly be invoked multiple times in a single
