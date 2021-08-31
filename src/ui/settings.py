@@ -15,6 +15,7 @@ class SettingsWindow(QMainWindow):
 
         self.stacked_widget = QStackedWidget(self)
         self.general_widget = QWidget(self)
+        self.general_ui()
 
         self.statusbar_widget = QWidget(self)
         self.statusbar_ui()
@@ -53,6 +54,16 @@ class SettingsWindow(QMainWindow):
 
         self.load_settings()
 
+    def general_ui(self):
+        layout = QFormLayout()
+        
+        self.opened_panes_on_startup_input = QSpinBox(self)
+        self.opened_panes_on_startup_input.setRange(1, 999)
+
+        layout.addRow("Directory panes on startup", self.opened_panes_on_startup_input)
+
+        self.general_widget.setLayout(layout)
+
     def statusbar_ui(self):
         layout = QFormLayout()
 
@@ -67,15 +78,22 @@ class SettingsWindow(QMainWindow):
         self.stacked_widget.setCurrentIndex(i)
     
     def load_settings(self):
-        self.harddrive_update_input.setValue(self.settings.value('harddrive_update_interval'))
+        try:
+            self.harddrive_update_input.setValue(self.settings.value('harddrive_update_interval'))
+            self.opened_panes_on_startup_input.setValue(self.settings.value('opened_panes_on_startup'))
+        except TypeError:
+            print("Failed to retrieve settings")
+            QMessageBox.warning(self, "Settings - Error", "Failed to retrieve settings.\nReverting to default.")
 
     def load_defaults(self):
         self.settings.clear()
         self.settings.setValue('harddrive_update_interval', 300)
+        self.settings.setValue('opened_panes_on_startup', 2)
         self.show_restart_message()
 
     def save_settings(self):
         self.settings.setValue('harddrive_update_interval', self.harddrive_update_input.value())
+        self.settings.setValue('opened_panes_on_startup', self.opened_panes_on_startup_input.value())
         self.show_restart_message()
 
     def show_restart_message(self):
