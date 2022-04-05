@@ -17,9 +17,9 @@ class Gui(QMainWindow):
         self.history = History()
         self.preview = Preview()
         self.preview.register_preview(TextPreview())
-
-        directory_pane = DirectoryPane(self, self.history, self.preview)
-        self.addDockWidget(Qt.LeftDockWidgetArea, directory_pane)
+        for i in range(QSettings("pancake", "app").value('opened_panes_on_startup')):
+            directory_pane = DirectoryPane(self, self.history, self.preview)
+            self.addDockWidget(Qt.LeftDockWidgetArea, directory_pane)
 
         self.create_menu()
 
