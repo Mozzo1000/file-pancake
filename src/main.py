@@ -65,15 +65,19 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
     gui = Gui()
     app.setQuitOnLastWindowClosed(False)
-    icon = QIcon("icon.png")
-    tray = QSystemTrayIcon()
-    tray.setIcon(icon)
-    tray.setVisible(True)
+
     def focus():
         gui.setWindowState(gui.windowState() & ~Qt.WindowMinimized | Qt.WindowActive)
         gui.show()
         gui.activateWindow()
         gui.raise_()
+
+    icon = QIcon("icon.png")
+    tray = QSystemTrayIcon()
+    tray.activated.connect(focus)
+    tray.setIcon(icon)
+    tray.setVisible(True)
+    
 
     menu = QMenu()
     open_window = QAction("Open")
