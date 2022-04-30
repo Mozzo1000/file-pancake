@@ -62,14 +62,14 @@ class Gui(QMainWindow):
         menu_bar.addMenu(window_menu)
 
     def open_change_dir_window(self):
-        change_dir_window = ChangeDirWindow(QApplication.focusWidget().parent().parent(), self.history.global_history['history'])
+        change_dir_window = ChangeDirWindow(QApplication.focusWidget().parent().parent(), self.history.get_history())
         change_dir_window.show()
     
     def focus_changed(self):
         print("YES")
 
     def closeEvent(self, event):
-        self.history.save()
+        self.history.conn.close()
     
     def open_settings(self):
         settings = SettingsWindow(self)

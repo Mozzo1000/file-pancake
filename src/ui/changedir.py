@@ -6,7 +6,6 @@ class ChangeDirWindow(QMainWindow):
         super().__init__(parent)
         self.setWindowFlags(Qt.Window | Qt.CustomizeWindowHint | Qt.WindowStaysOnTopHint)
         self.data = data
-        print(data)
         self.parent = parent
         layout = QVBoxLayout()
         widget = QWidget()
@@ -33,8 +32,7 @@ class ChangeDirWindow(QMainWindow):
 
     def populate_list(self):
         for i in self.data:
-            item = QListWidgetItem(i['location'])
-            item.setData(Qt.UserRole, i['weight'])
+            item = QListWidgetItem(i)
             self.listwidget.addItem(item)
 
     def search_changed(self, event):
