@@ -15,8 +15,6 @@ class Gui(QMainWindow):
         self.resize(800, 600)
         self.setWindowTitle('Pancake')
 
-        self.panes = []
-
         self.history = History()
         self.preview = Preview()
         self.preview.register_preview(TextPreview())
@@ -34,7 +32,6 @@ class Gui(QMainWindow):
     def create_pane(self):
         directory_pane = DirectoryPane(self, self.history, self.preview)
         self.addDockWidget(Qt.LeftDockWidgetArea, directory_pane)
-        self.panes.append(directory_pane)
 
     def create_menu(self):
         menu_bar = self.menuBar()
@@ -65,7 +62,7 @@ class Gui(QMainWindow):
         menu_bar.addMenu(window_menu)
 
     def open_change_dir_window(self):
-        change_dir_window = ChangeDirWindow(self.panes[0], self.history.global_history['history'])
+        change_dir_window = ChangeDirWindow(QApplication.focusWidget().parent().parent(), self.history.global_history['history'])
         change_dir_window.show()
     
     def focus_changed(self):
