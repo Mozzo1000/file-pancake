@@ -6,7 +6,6 @@ import os
 from ui.dialog import CreateFolderDialog
 from send2trash import send2trash
 from lib.properties import Properties
-from ui.changedir import ChangeDirWindow
 from components.drive_size import DriveSize
 
 class DirectoryPane(QDockWidget):
@@ -59,9 +58,7 @@ class DirectoryPane(QDockWidget):
         self.main_widget.setLayout(self.layout)
         self.setWidget(self.main_widget)
         self.tree.sortByColumn(0, 0)
-
-        open_change_dir_window_action = QShortcut(QKeySequence('Ctrl+P'), self)
-        open_change_dir_window_action.activated.connect(self.open_change_dir_window)
+        
         self.setWindowTitle(QDir(self.get_current_dir()).dirName())
 
 
@@ -127,10 +124,6 @@ class DirectoryPane(QDockWidget):
                 if action == new_folder_action:
                     dialog = CreateFolderDialog(self, self.search_input.text())
                     dialog.show()
-
-    def open_change_dir_window(self):
-        change_dir_window = ChangeDirWindow(self, self.history.global_history['history'])
-        change_dir_window.show()
 
     def get_current_dir(self):
         return self.model.filePath(self.tree.rootIndex())

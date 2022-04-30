@@ -7,6 +7,7 @@ from history import History
 from preview import Preview
 from components.text_preview import TextPreview
 from ui.settings import SettingsWindow
+from ui.changedir import ChangeDirWindow
 
 class Gui(QMainWindow):
     def __init__(self):
@@ -14,21 +15,26 @@ class Gui(QMainWindow):
         self.resize(800, 600)
         self.setWindowTitle('Pancake')
 
+        self.panes = []
+
         self.history = History()
         self.preview = Preview()
         self.preview.register_preview(TextPreview())
         if QSettings("pancake", "app").contains('opened_panes_on_startup'):
             for i in range(QSettings("pancake", "app").value('opened_panes_on_startup')):
-                directory_pane = DirectoryPane(self, self.history, self.preview)
-                self.addDockWidget(Qt.LeftDockWidgetArea, directory_pane)
+                self.create_pane()
         else:
-            directory_pane = DirectoryPane(self, self.history, self.preview)
-            self.addDockWidget(Qt.LeftDockWidgetArea, directory_pane)
+            self.create_pane()
 
         self.create_menu()
-
+        
         self.showMaximized()
         self.show()
+
+    def create_pane(self):
+        directory_pane = DirectoryPane(self, self.history, self.preview)
+        self.addDockWidget(Qt.LeftDockWidgetArea, directory_pane)
+        self.panes.append(directory_pane)
 
     def create_menu(self):
         menu_bar = self.menuBar()
@@ -43,19 +49,27 @@ class Gui(QMainWindow):
         exit_action.triggered.connect(self.close)
 
         new_explorer_window_action = QAction('&New pane window', self)
-        new_explorer_window_action.triggered.connect(self.new_explorer_window)
+        new_explorer_window_action.triggered.connect(self.create_pane)
         new_explorer_window_action.setShortcut(QKeySequence('CTRL+N'))
+
+        open_quick_search = QAction('&Open quich search', self)
+        open_quick_search.triggered.connect(self.open_change_dir_window)
+        open_quick_search.setShortcut(QKeySequence('CTRL+P'))
 
         file_menu.addAction(open_settings_action)
         file_menu.addAction(exit_action)
         window_menu.addAction(new_explorer_window_action)
+        window_menu.addAction(open_quick_search)
 
         menu_bar.addMenu(file_menu)
         menu_bar.addMenu(window_menu)
 
-    def new_explorer_window(self):
-        directory_pane = DirectoryPane(self, self.history, self.preview)
-        self.addDockWidget(Qt.RightDockWidgetArea, directory_pane)
+    def open_change_dir_window(self):
+        change_dir_window = ChangeDirWindow(self.panes[0], self.history.global_history['history'])
+        change_dir_window.show()
+    
+    def focus_changed(self):
+        print("YES")
 
     def closeEvent(self, event):
         self.history.save()
@@ -82,7 +96,6 @@ if __name__ == '__main__':
     tray.setIcon(icon)
     tray.setVisible(True)
     
-
     menu = QMenu()
     open_window = QAction("Open")
     open_window.triggered.connect(focus)
@@ -93,6 +106,5 @@ if __name__ == '__main__':
     menu.addAction(quit)
     
     tray.setContextMenu(menu)
-
 
     sys.exit(app.exec_())
