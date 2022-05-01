@@ -7,7 +7,6 @@ class History():
         self.history_file = history_location + '/history.sql'
 
         self.conn = sqlite3.connect(self.history_file)
-        self.conn.row_factory = lambda cursor, row: row[0]
 
         if not os.path.exists(history_location):
             os.makedirs(history_location)
@@ -22,14 +21,18 @@ class History():
     
     def add_visit(self, folder):
         cursor = self.conn.cursor()
-        print(folder)
-        sql = """INSERT OR IGNORE INTO history (location, weight) VALUES(?, ?)"""
-        cursor.execute(sql, (folder, 1))
-        self.conn.commit()
+
+        sql_already_exists = """SELECT * FROM history WHERE location=?"""
+        already_exists = cursor.execute(sql_already_exists, (folder,)).fetchone()
+        if already_exists:
+            # Update visit amount
+            cursor.execute("UPDATE history SET weight=? WHERE location=?", (already_exists[1]+1, already_exists[0]))
+            self.conn.commit()
+        else:
+            sql = """INSERT OR IGNORE INTO history (location, weight) VALUES(?, ?)"""
+            cursor.execute(sql, (folder, 1))
+            self.conn.commit()
 
     def get_history(self):
         cursor = self.conn.cursor()
         return cursor.execute("SELECT location FROM history ORDER BY weight DESC").fetchall()
-    
-    def update_visit_amount(self, folder, amount=1):
-        pass

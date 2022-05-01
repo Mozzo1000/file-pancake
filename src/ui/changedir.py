@@ -32,7 +32,7 @@ class ChangeDirWindow(QMainWindow):
 
     def populate_list(self):
         for i in self.data:
-            item = QListWidgetItem(i)
+            item = QListWidgetItem(i[0])
             self.listwidget.addItem(item)
 
     def search_changed(self, event):
