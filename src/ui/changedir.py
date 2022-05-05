@@ -4,6 +4,8 @@ from PyQt5.QtWidgets import QHBoxLayout, QLabel, QListWidget, QPushButton, QVBox
 class ChangeDirWindow(QMainWindow):
     def __init__(self, parent, data):
         super().__init__(parent)
+        self.resize(650, 260)
+        self.move(self.screen().geometry().center() - self.frameGeometry().center())
         self.setWindowFlags(Qt.Window | Qt.CustomizeWindowHint | Qt.WindowStaysOnTopHint)
         self.data = data
         self.parent = parent
@@ -14,6 +16,7 @@ class ChangeDirWindow(QMainWindow):
         dir_input.textChanged.connect(self.search_changed)
 
         self.listwidget = QListWidget()
+        self.listwidget.setAlternatingRowColors(True)
         self.populate_list()
         self.listwidget.setCurrentRow(0, QItemSelectionModel.Select)
 
