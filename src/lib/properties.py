@@ -1,6 +1,9 @@
 import sys
+
 if sys.platform == 'win32':
     from lib.platform.properties_win import open_property_window_win
+elif sys.platform == 'darwin':
+    from lib.platform.properties_mac import open_property_window_mac
 from PyQt5.QtWidgets import QMessageBox
 
 class Properties():
@@ -11,5 +14,7 @@ class Properties():
     def open_window(self):
         if sys.platform == 'win32':
             open_property_window_win(self.file_name)
+        elif sys.platform == 'darwin':
+            open_property_window_mac(self.file_name)
         else:
             QMessageBox.information(self.parent_window, '', f'Properties are currently not implemented on your system.\n System info: {sys.platform}')
