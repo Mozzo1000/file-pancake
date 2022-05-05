@@ -19,7 +19,7 @@ class DirectoryPane(QDockWidget):
         self.layout = QVBoxLayout()
 
         self.model = QFileSystemModel()
-        self.model.setReadOnly(False)
+        self.model.setReadOnly(True)
         self.model.setRootPath('')
 
         self.tree = QTreeView()
@@ -37,7 +37,8 @@ class DirectoryPane(QDockWidget):
         self.tree.setRootIsDecorated(False)
         self.tree.setExpandsOnDoubleClick(False)
         self.tree.setContextMenuPolicy(Qt.CustomContextMenu)  
-        self.tree.customContextMenuRequested.connect(self.customContextMenuEvent)  
+        self.tree.customContextMenuRequested.connect(self.customContextMenuEvent) 
+        self.tree.itemDelegate().closeEditor.connect(self.onCloseEdit)
 
         self.search_input = QLineEdit()
         self.search_input.setText(QDir.homePath())
@@ -62,6 +63,8 @@ class DirectoryPane(QDockWidget):
         
         self.setWindowTitle(QDir(self.get_current_dir()).dirName())
 
+    def onCloseEdit(self, editor):
+        self.model.setReadOnly(True)
 
     def search_enter(self):
         self.tree.setRootIndex(self.model.index(self.search_input.text()))
@@ -120,6 +123,7 @@ class DirectoryPane(QDockWidget):
                 if action == preview_action:
                     self.preview.open_preview_window(self.parent, self.model.filePath(self.tree.indexAt(event)))
                 if action == rename_action:
+                    self.model.setReadOnly(False)
                     self.tree.edit(self.tree.indexAt(event))
         else:
             new_folder_action = contextMenu.addAction("New folder")
