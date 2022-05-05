@@ -19,6 +19,7 @@ class DirectoryPane(QDockWidget):
         self.layout = QVBoxLayout()
 
         self.model = QFileSystemModel()
+        self.model.setReadOnly(False)
         self.model.setRootPath('')
 
         self.tree = QTreeView()
@@ -94,6 +95,7 @@ class DirectoryPane(QDockWidget):
         if self.tree.indexAt(event).data():
             open_action = contextMenu.addAction('Open')
             preview_action = contextMenu.addAction('Preview')
+            rename_action = contextMenu.addAction('Rename')
             delete_action = contextMenu.addAction('Delete')
             contextMenu.addSeparator()
             properties_action = contextMenu.addAction('Properties')
@@ -117,6 +119,8 @@ class DirectoryPane(QDockWidget):
                     properties_window.open_window()
                 if action == preview_action:
                     self.preview.open_preview_window(self.parent, self.model.filePath(self.tree.indexAt(event)))
+                if action == rename_action:
+                    self.tree.edit(self.tree.indexAt(event))
         else:
             new_folder_action = contextMenu.addAction("New folder")
             action = contextMenu.exec_(self.tree.mapToGlobal(event))
