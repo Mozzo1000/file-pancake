@@ -1,3 +1,4 @@
+from atexit import register
 import sys
 from PyQt5.QtWidgets import QMainWindow, QApplication, QShortcut, qApp, QMenu, QAction, QSystemTrayIcon
 from PyQt5.QtCore import Qt, QSettings
@@ -6,6 +7,7 @@ from components.directorypane import DirectoryPane
 from history import History
 from preview import Preview
 from components.text_preview import TextPreview
+from components.word_preview import WordPreview
 from ui.settings import SettingsWindow
 from ui.changedir import ChangeDirWindow
 
@@ -18,6 +20,7 @@ class Gui(QMainWindow):
         self.history = History()
         self.preview = Preview()
         self.preview.register_preview(TextPreview())
+        self.preview.register_preview(WordPreview())
         if QSettings("pancake", "app").contains('opened_panes_on_startup'):
             for i in range(QSettings("pancake", "app").value('opened_panes_on_startup')):
                 self.create_pane()
