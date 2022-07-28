@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QDockWidget, QFileSystemModel, QLabel, QTreeView, QLineEdit, QWidget, QVBoxLayout, QHeaderView, QMenu, QTreeWidget, QMessageBox, QShortcut, QCompleter, QStatusBar
-from PyQt5.QtCore import QUrl
+from PyQt5.QtCore import QUrl, QSettings
 from PyQt5.QtGui import QDesktopServices, QKeySequence
 from PyQt5.QtCore import Qt, QDir, QSortFilterProxyModel
 import os
@@ -7,6 +7,7 @@ from ui.dialog import CreateFolderDialog
 from send2trash import send2trash
 from lib.properties import Properties
 from components.drive_size import DriveSize
+import pathlib
 
 class DirectoryPane(QDockWidget):
     def __init__(self, parent, history, preview):
@@ -29,7 +30,8 @@ class DirectoryPane(QDockWidget):
         self.tree.header().setSectionResizeMode(QHeaderView.Interactive)
         self.tree.header().setSectionResizeMode(0, QHeaderView.Stretch)
         self.tree.setSortingEnabled(True)
-        self.tree.doubleClicked.connect(self.item_clicked)
+        self.tree.doubleClicked.connect(self.item_double_clicked)
+        self.tree.clicked.connect(self.item_clicked)
                 
         self.tree.setAnimated(True) # Closing folder animation
         self.tree.setIndentation(20)
@@ -79,8 +81,15 @@ class DirectoryPane(QDockWidget):
             self.setWindowTitle(QDir(self.get_current_dir()).dirName())
             self.drive_size_widget.update_path(self.get_current_dir())
         
-    def item_clicked(self, event):
+    def item_double_clicked(self, event):
         self.run_or_open(self.model.filePath(event))
+    
+    def item_clicked(self, event):
+        if QSettings("pancake", "app").value('auto_open_preview'):
+            path = self.model.filePath(event)
+            ext = pathlib.Path(path).suffix.replace(".", "")
+            if ext in self.preview.get_extensions():
+                self.preview.open_preview_window(self.parent, path)
 
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_Backspace:

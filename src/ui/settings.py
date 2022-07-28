@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QMainWindow, QPushButton, QMessageBox, \
     QListWidget, QWidget, QStackedWidget, QFormLayout, QSpinBox, \
-    QGridLayout
+    QGridLayout, QCheckBox
 from PyQt5.QtCore import QSize, QSettings, QProcess, QCoreApplication
 import sys
 
@@ -60,7 +60,10 @@ class SettingsWindow(QMainWindow):
         self.opened_panes_on_startup_input = QSpinBox(self)
         self.opened_panes_on_startup_input.setRange(1, 999)
 
+        self.auto_open_preview_input = QCheckBox(self)
+
         layout.addRow("Directory panes on startup", self.opened_panes_on_startup_input)
+        layout.addRow("Automatically open preview on left click", self.auto_open_preview_input)
 
         self.general_widget.setLayout(layout)
 
@@ -81,6 +84,7 @@ class SettingsWindow(QMainWindow):
         try:
             self.harddrive_update_input.setValue(self.settings.value('harddrive_update_interval'))
             self.opened_panes_on_startup_input.setValue(self.settings.value('opened_panes_on_startup'))
+            self.auto_open_preview_input.setChecked(self.settings.value('auto_open_preview'))
         except TypeError:
             print("Failed to retrieve settings")
             QMessageBox.warning(self, "Settings - Error", "Failed to retrieve settings.\nReverting to default.")
@@ -89,11 +93,13 @@ class SettingsWindow(QMainWindow):
         self.settings.clear()
         self.settings.setValue('harddrive_update_interval', 300)
         self.settings.setValue('opened_panes_on_startup', 2)
+        self.settings.setValue('auto_open_preview', False)
         self.show_restart_message()
 
     def save_settings(self):
         self.settings.setValue('harddrive_update_interval', self.harddrive_update_input.value())
         self.settings.setValue('opened_panes_on_startup', self.opened_panes_on_startup_input.value())
+        self.settings.setValue('auto_open_preview', self.auto_open_preview_input.checkState())
         self.show_restart_message()
 
     def show_restart_message(self):
