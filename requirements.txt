@@ -1,2 +1,3 @@
 PyQt5
 Send2Trash
+docx2python
