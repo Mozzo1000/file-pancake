@@ -19,6 +19,10 @@ class PreviewBase(QDockWidget):
         _open.triggered.connect(self.open_file)
         self._toolbar.addAction(_open)
 
+        _refresh = QAction("Refresh", self)
+        _refresh.triggered.connect(lambda: self.set_file(self._file_full_path))
+        self._toolbar.addAction(_refresh)
+
         _inner_window.addToolBar(self._toolbar)
         self.setWidget(_inner_window)
         _inner_window.setCentralWidget(_base_widget)
