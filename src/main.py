@@ -53,9 +53,9 @@ class Gui(QMainWindow):
         new_explorer_window_action.triggered.connect(self.create_pane)
         new_explorer_window_action.setShortcut(QKeySequence('CTRL+N'))
 
-        open_quick_search = QAction('&Open quich search', self)
-        open_quick_search.triggered.connect(self.open_change_dir_window)
-        open_quick_search.setShortcut(QKeySequence('CTRL+P'))
+        open_quick_navigation = QAction('&Open quich navigation', self)
+        open_quick_navigation.triggered.connect(self.open_change_dir_window)
+        open_quick_navigation.setShortcut(QKeySequence('CTRL+P'))
 
         open_file_search = QAction("&File search", self)
         open_file_search.triggered.connect(self.open_file_search_window)
@@ -64,7 +64,7 @@ class Gui(QMainWindow):
         file_menu.addAction(open_settings_action)
         file_menu.addAction(exit_action)
         window_menu.addAction(new_explorer_window_action)
-        window_menu.addAction(open_quick_search)
+        window_menu.addAction(open_quick_navigation)
         window_menu.addAction(open_file_search)
 
         menu_bar.addMenu(file_menu)
