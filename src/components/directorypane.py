@@ -6,6 +6,7 @@ import os
 from ui.dialog import CreateFolderDialog
 from send2trash import send2trash
 from lib.properties import Properties
+from lib.terminal import Terminal
 from components.drive_size import DriveSize
 import pathlib
 
@@ -134,13 +135,18 @@ class DirectoryPane(QDockWidget):
                 if action == rename_action:
                     self.model.setReadOnly(False)
                     self.tree.edit(self.tree.indexAt(event))
+                
         else:
             new_folder_action = contextMenu.addAction("New folder")
+            open_terminal = contextMenu.addAction("Open terminal here")
             action = contextMenu.exec_(self.tree.mapToGlobal(event))
             if action is not None:
                 if action == new_folder_action:
                     dialog = CreateFolderDialog(self, self.search_input.text())
                     dialog.show()
+                if action == open_terminal:
+                    terminal_window = Terminal(self, self.get_current_dir())
+                    terminal_window.open_window()
 
     def get_current_dir(self):
         return self.model.filePath(self.tree.rootIndex())
