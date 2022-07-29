@@ -8,6 +8,7 @@ from send2trash import send2trash
 from lib.properties import Properties
 from components.drive_size import DriveSize
 import pathlib
+from ui.find import FindWindow
 
 class DirectoryPane(QDockWidget):
     def __init__(self, parent, history, preview):
@@ -55,6 +56,9 @@ class DirectoryPane(QDockWidget):
         status.setStyleSheet("background-color: rgb(236,236,236);")
         self.drive_size_widget = DriveSize(self.get_current_dir())
         status.addPermanentWidget(self.drive_size_widget)
+
+        find_shortcut = QShortcut(QKeySequence("CTRL+F"), self)
+        find_shortcut.activated.connect(lambda: FindWindow(self, self.get_current_dir()).show())
 
         self.layout.addWidget(self.search_input)
         self.layout.addWidget(self.tree)
