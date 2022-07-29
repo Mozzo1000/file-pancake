@@ -1,5 +1,5 @@
-from PyQt5.QtCore import Qt, QDir, QDirIterator
-from PyQt5.QtWidgets import qApp, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QFormLayout, QMainWindow, QLineEdit, QWidget, QHeaderView, QTableWidget, QTableWidgetItem, QAbstractItemView, QProgressDialog
+from PyQt5.QtCore import Qt, QDir, QDirIterator, QFileInfo
+from PyQt5.QtWidgets import qApp, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QMenu, QFormLayout, QMainWindow, QLineEdit, QWidget, QHeaderView, QTableWidget, QTableWidgetItem, QAbstractItemView, QProgressDialog
 import humanize
 
 class FindWindow(QMainWindow):
@@ -38,6 +38,9 @@ class FindWindow(QMainWindow):
         self.file_table.verticalHeader().hide()
         self.file_table.setShowGrid(False)
         self.file_table.cellActivated.connect(self.open_file)
+        self.file_table.setContextMenuPolicy(Qt.CustomContextMenu)  
+        self.file_table.customContextMenuRequested.connect(self.customContextMenuEvent) 
+
 
         form_layout.addRow("File name: ", self.file_input)
         form_layout.addRow("Directory: ", self.directory_input)
@@ -101,3 +104,18 @@ class FindWindow(QMainWindow):
         item = self.file_table.item(row, 0)
         self.parent.run_or_open(item.data(Qt.UserRole))
 
+    def customContextMenuEvent(self, event):
+        contextMenu = QMenu(self)
+        if self.file_table.indexAt(event).data():
+            open_action = contextMenu.addAction('Open')
+            open_location = contextMenu.addAction('Open location')
+            contextMenu.addSeparator()
+            action = contextMenu.exec_(self.file_table.mapToGlobal(event))
+            if action is not None:
+                if action == open_action:
+                    print(self.file_table.indexAt(event).data(Qt.UserRole))
+                    self.parent.run_or_open(self.file_table.indexAt(event).data(Qt.UserRole))
+                if action == open_location:
+                    abs_path = QFileInfo(self.file_table.indexAt(event).data(Qt.UserRole)).absolutePath()
+                    self.parent.tree.setRootIndex(self.parent.model.index(abs_path))
+                    self.parent.search_input.setText(abs_path)
