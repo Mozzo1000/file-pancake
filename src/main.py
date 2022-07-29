@@ -10,6 +10,7 @@ from components.text_preview import TextPreview
 from components.word_preview import WordPreview
 from ui.settings import SettingsWindow
 from ui.changedir import ChangeDirWindow
+from ui.find import FindWindow
 
 class Gui(QMainWindow):
     def __init__(self):
@@ -56,10 +57,15 @@ class Gui(QMainWindow):
         open_quick_search.triggered.connect(self.open_change_dir_window)
         open_quick_search.setShortcut(QKeySequence('CTRL+P'))
 
+        open_file_search = QAction("&File search", self)
+        open_file_search.triggered.connect(self.open_file_search_window)
+        open_file_search.setShortcut(QKeySequence('CTRL+F'))
+
         file_menu.addAction(open_settings_action)
         file_menu.addAction(exit_action)
         window_menu.addAction(new_explorer_window_action)
         window_menu.addAction(open_quick_search)
+        window_menu.addAction(open_file_search)
 
         menu_bar.addMenu(file_menu)
         menu_bar.addMenu(window_menu)
@@ -67,6 +73,11 @@ class Gui(QMainWindow):
     def open_change_dir_window(self):
         change_dir_window = ChangeDirWindow(QApplication.focusWidget().parent().parent(), self.history.get_history())
         change_dir_window.show()
+    
+    def open_file_search_window(self):
+        find_window = FindWindow(QApplication.focusWidget().parent().parent())
+        find_window.show()
+
     
     def focus_changed(self):
         print("YES")

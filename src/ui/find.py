@@ -3,9 +3,9 @@ from PyQt5.QtWidgets import qApp, QHBoxLayout, QVBoxLayout, QLabel, QPushButton,
 import humanize
 
 class FindWindow(QMainWindow):
-    def __init__(self, parent, current_dir):
+    def __init__(self, parent):
         super().__init__(parent)
-        self.current_dir = current_dir
+        self.current_dir = parent.get_current_dir()
         self.parent = parent
 
         self.resize(650, 260)
