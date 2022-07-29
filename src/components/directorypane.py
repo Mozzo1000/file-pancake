@@ -47,9 +47,9 @@ class DirectoryPane(QDockWidget):
         self.search_input.setText(QDir.homePath())
         self.search_input.returnPressed.connect(self.search_enter)
         self.search_input.setFocusPolicy(Qt.ClickFocus)
-        completer = QCompleter()
-        completer.setModel(self.model)
-        self.search_input.setCompleter(completer)
+        self.completer = QCompleter()
+        self.completer.setModel(self.model)
+        self.search_input.setCompleter(self.completer)
 
         status = QStatusBar(self)
         status.setSizeGripEnabled(False)

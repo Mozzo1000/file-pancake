@@ -29,6 +29,7 @@ class FindWindow(QMainWindow):
         self.directory_input = QLineEdit(self)
         self.directory_input.setText(self.current_dir)
         self.directory_input.returnPressed.connect(find_button.click)
+        self.directory_input.setCompleter(self.parent.completer)
 
         self.file_table = QTableWidget(0, 2)
         self.file_table.setSelectionBehavior(QAbstractItemView.SelectRows)
