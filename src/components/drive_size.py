@@ -2,6 +2,7 @@ from PyQt5.QtCore import QSettings
 from PyQt5.QtWidgets import QLabel
 from threading import Timer
 import shutil
+import humanize
 
 class DriveSize(QLabel):
     def __init__(self, path):
@@ -24,7 +25,8 @@ class DriveSize(QLabel):
         thread.start()
         try:
             total, used, free = shutil.disk_usage(self.path)
-            self.setText(f"Free: {(free // (2**30))} GiB of {(total // (2**30))} GiB")
+            #self.setText(f"Free: {(free // (2**30))} GiB of {(total // (2**30))} GiB")
+            self.setText(f"Free: {humanize.naturalsize(free)} of {humanize.naturalsize(total)}")
         except FileNotFoundError:
             self.setText("Failed to retrieve harddrive usage")
 

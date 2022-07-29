@@ -1,5 +1,6 @@
 from PyQt5.QtCore import Qt, QDir, QDirIterator
 from PyQt5.QtWidgets import qApp, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QFormLayout, QMainWindow, QLineEdit, QWidget, QHeaderView, QTableWidget, QTableWidgetItem, QAbstractItemView, QProgressDialog
+import humanize
 
 class FindWindow(QMainWindow):
     def __init__(self, parent, current_dir):
@@ -82,7 +83,7 @@ class FindWindow(QMainWindow):
             file_name_item.setData(Qt.UserRole, files.filePath())
             file_name_item.setFlags(file_name_item.flags() ^ Qt.ItemIsEditable)
 
-            file_size_item = QTableWidgetItem("%d KB" % (int((size + 1023) / 1024)))
+            file_size_item = QTableWidgetItem(humanize.naturalsize(size))
             file_size_item.setTextAlignment(Qt.AlignVCenter | Qt.AlignRight)
             file_size_item.setFlags(file_size_item.flags() ^ Qt.ItemIsEditable)
 
