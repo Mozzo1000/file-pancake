@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt, QDir, QDirIterator, QFileInfo
-from PyQt5.QtWidgets import qApp, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QMenu, QFormLayout, QMainWindow, QLineEdit, QWidget, QHeaderView, QTableWidget, QTableWidgetItem, QAbstractItemView, QProgressDialog
+from PyQt5.QtWidgets import qApp, QFileDialog, QComboBox, QHBoxLayout, QVBoxLayout, QLabel, QPushButton, QMenu, QFormLayout, QMainWindow, QLineEdit, QWidget, QHeaderView, QTableWidget, QTableWidgetItem, QAbstractItemView, QProgressDialog
 import humanize
 
 class FindWindow(QMainWindow):
@@ -15,12 +15,20 @@ class FindWindow(QMainWindow):
 
         layout = QVBoxLayout()
         form_layout = QFormLayout()
+        file_layout = QHBoxLayout()
+        directory_layout = QHBoxLayout()
+        options_layout = QHBoxLayout()
+        options_form_layout = QFormLayout()
+        options_form_layout.setFormAlignment(Qt.AlignLeft)
         bottom_layout = QHBoxLayout()
         widget = QWidget()
 
         find_button = QPushButton("Find")
         find_button.clicked.connect(self.find_files)
         find_button.setAutoDefault(True)
+
+        browse_button = QPushButton("Browse")
+        browse_button.clicked.connect(self.browse_folders)
 
         self.files_found_label = QLabel()
 
@@ -39,21 +47,45 @@ class FindWindow(QMainWindow):
         self.file_table.setShowGrid(False)
         self.file_table.cellActivated.connect(self.open_file)
         self.file_table.setContextMenuPolicy(Qt.CustomContextMenu)  
-        self.file_table.customContextMenuRequested.connect(self.customContextMenuEvent) 
+        self.file_table.customContextMenuRequested.connect(self.customContextMenuEvent)
 
+        self.limit_selection = QComboBox(self)
+        self.limit_selection.addItem("None")
+        self.limit_selection.addItem("5")
+        self.limit_selection.addItem("10")
+        self.limit_selection.addItem("15")
+        self.limit_selection.addItem("25")
+        self.limit_selection.addItem("50")
+        self.limit_selection.addItem("100")
+        self.limit_selection.addItem("500")
 
-        form_layout.addRow("File name: ", self.file_input)
-        form_layout.addRow("Directory: ", self.directory_input)
+        file_layout.addWidget(QLabel("File name: "))
+        file_layout.addWidget(self.file_input)
+        directory_layout.addWidget(QLabel("Directory: "))
+        directory_layout.addWidget(self.directory_input)
+        directory_layout.addWidget(browse_button)
+
+        options_form_layout.addRow("Limit: ", self.limit_selection)
+
         form_layout.addRow(self.file_table)
 
         bottom_layout.addWidget(self.files_found_label)
         bottom_layout.addWidget(find_button)
 
+        layout.addLayout(file_layout)
+        layout.addLayout(directory_layout)
+        layout.addLayout(options_layout)
+        options_layout.addLayout(options_form_layout)
         layout.addLayout(form_layout)
         layout.addLayout(bottom_layout)
 
         widget.setLayout(layout)
         self.setCentralWidget(widget)
+
+    def browse_folders(self):
+        dialog = QFileDialog()
+        folder_path = dialog.getExistingDirectory(self, "Select folder")
+        self.directory_input.setText(folder_path)
     
     def find_files(self):
         self.file_table.setRowCount(0)
@@ -74,6 +106,9 @@ class FindWindow(QMainWindow):
         files = QDirIterator(path, ["*" + file_name + "*"], QDir.Files|QDir.NoSymLinks|QDir.NoDotAndDotDot, QDirIterator.Subdirectories)
         count = 0
         while files.hasNext():
+            if self.limit_selection.currentText() != "None":
+                if int(self.limit_selection.currentText()) == count:
+                    break
             files.next()
             progress.setValue(count)
             progress.setLabelText(f"Found {count} files..")
