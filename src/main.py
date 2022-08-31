@@ -35,7 +35,7 @@ class Gui(QMainWindow):
 
     def create_pane(self):
         directory_pane = DirectoryPane(self, self.history, self.preview)
-        self.addDockWidget(Qt.LeftDockWidgetArea, directory_pane)
+        self.addDockWidget(Qt.LeftDockWidgetArea, directory_pane, Qt.Horizontal)
 
     def create_menu(self):
         menu_bar = self.menuBar()

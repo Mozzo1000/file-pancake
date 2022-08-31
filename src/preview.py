@@ -31,7 +31,7 @@ class Preview():
         if previewer:
             previewer = previewer()
             previewer.set_file(file_full_path)
-            parent_window.addDockWidget(Qt.RightDockWidgetArea, previewer)
+            parent_window.addDockWidget(Qt.RightDockWidgetArea, previewer, Qt.Vertical)
         else:
             # Show a message box becuase 'previewer' returned None
             QMessageBox.information(parent_window, 'Preview', f'No preview available for files with extension {file_info.completeSuffix()}')
