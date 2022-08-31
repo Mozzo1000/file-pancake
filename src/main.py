@@ -15,7 +15,7 @@ from ui.find import FindWindow
 class Gui(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.resize(800, 600)
+        self.resize(1080, 790)
         self.setWindowTitle('Pancake')
 
         self.history = History()
