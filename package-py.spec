@@ -49,3 +49,10 @@ coll = COLLECT(
     upx_exclude=[],
     name='pancake',
 )
+
+app = BUNDLE(
+    coll,
+    name='Pancake.app',
+    icon="src/icon.icns",
+    bundle_identifier=None,
+)
