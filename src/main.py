@@ -1,4 +1,4 @@
-from atexit import register
+from PyQt5.QtWidgets import QMainWindow, QApplication, QShortcut, qApp, QMenu, QAction, QSystemTrayIcon
 import sys
 import os
 from PyQt5.QtCore import Qt, QSettings
