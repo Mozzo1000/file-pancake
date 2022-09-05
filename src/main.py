@@ -1,6 +1,6 @@
 from atexit import register
 import sys
-from PyQt5.QtWidgets import QMainWindow, QApplication, QShortcut, qApp, QMenu, QAction, QSystemTrayIcon
+import os
 from PyQt5.QtCore import Qt, QSettings
 from PyQt5.QtGui import QKeySequence, QIcon
 from components.directorypane import DirectoryPane
@@ -12,11 +12,20 @@ from ui.settings import SettingsWindow
 from ui.changedir import ChangeDirWindow
 from ui.find import FindWindow
 
+basedir = os.path.dirname(__file__)
+try:
+    from ctypes import windll  # Only exists on Windows.
+    myappid = 'mozzo.file.pancake'
+    windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+except ImportError:
+    pass
+
 class Gui(QMainWindow):
     def __init__(self):
         super().__init__()
         self.resize(1080, 790)
         self.setWindowTitle('Pancake')
+        self.setWindowIcon(QIcon(os.path.join(basedir, "icon.png")))
 
         self.history = History()
         self.preview = Preview()
@@ -101,7 +110,7 @@ if __name__ == '__main__':
         gui.activateWindow()
         gui.raise_()
 
-    icon = QIcon("icon.png")
+    icon = QIcon(os.path.join(basedir, "icon.png"))
     tray = QSystemTrayIcon()
     tray.activated.connect(focus)
     tray.setIcon(icon)
