@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Pancake"
-#define MyAppVersion "1.0"
+#define MyAppVersion "1.0.1"
 #define MyAppPublisher "Andreas Backström"
 #define MyAppURL "https://github.com/Mozzo1000/file-pancake"
 #define MyAppExeName "Pancake.exe"
