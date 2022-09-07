@@ -6,10 +6,10 @@ class History():
         history_location = os.path.join(os.path.expanduser("~"), '.pancake')
         self.history_file = history_location + '/history.sql'
 
-        self.conn = sqlite3.connect(self.history_file)
-
         if not os.path.exists(history_location):
             os.makedirs(history_location)
+
+        self.conn = sqlite3.connect(self.history_file)
         self.create_default_table()
 
     def create_default_table(self):
