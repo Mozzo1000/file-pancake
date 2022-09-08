@@ -31,6 +31,10 @@ class ImagePreview(PreviewBase):
         self._toolbar.addAction(self.rotate_left_button)
         self._toolbar.addAction(self.rotate_right_button)
 
+        self.save_changes_button = QAction("Save", self)
+        self.save_changes_button.triggered.connect(lambda: self.label.pixmap().save(self.get_file_full_path()))
+        self._toolbar.addAction(self.save_changes_button)
+
         self.scrollArea = QScrollArea()
         self.scrollArea.setWidget(self.label)
         self.scrollArea.setVisible(True)
