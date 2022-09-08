@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QWidget, QDockWidget, QLabel, QScrollArea, QSizePolicy, QSlider
-from PyQt5.QtGui import QPalette, QImage, QPixmap
+from PyQt5.QtWidgets import QWidget, QDockWidget, QLabel, QScrollArea, QSizePolicy, QSlider, QAction
+from PyQt5.QtGui import QPalette, QImage, QPixmap, QTransform
 from PyQt5.QtCore import Qt
 from .preview_base import PreviewBase
 
@@ -23,7 +23,13 @@ class ImagePreview(PreviewBase):
         self.zoom_slider.setTickInterval(5)
         self.zoom_slider.valueChanged.connect(self.on_zoom)
         self._toolbar.addWidget(self.zoom_slider)
-
+        
+        self.rotate_left_button = QAction("Rotate left", self)
+        self.rotate_left_button.triggered.connect(lambda: self.rotate_image(-90))
+        self.rotate_right_button = QAction("Rotate right", self)
+        self.rotate_right_button.triggered.connect(lambda: self.rotate_image(+90))
+        self._toolbar.addAction(self.rotate_left_button)
+        self._toolbar.addAction(self.rotate_right_button)
 
         self.scrollArea = QScrollArea()
         self.scrollArea.setWidget(self.label)
@@ -39,6 +45,13 @@ class ImagePreview(PreviewBase):
     
     def on_zoom(self):
         self.scale_image(float(self.zoom_slider.value() / 10 ** 2))
+
+    def rotate_image(self, rotation):
+        pixmap = self.label.pixmap()
+        transform = QTransform().rotate(rotation)
+        pixmap = pixmap.transformed(transform, Qt.SmoothTransformation)
+        self.label.setPixmap(pixmap)
+        self.scale_image(self.scale_factor)
 
     def set_file(self, file_full_path):
         super().set_file(file_full_path)
