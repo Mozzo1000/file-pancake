@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QWidget, QDockWidget, QLabel, QScrollArea, QSizePolicy, QSlider, QAction
-from PyQt5.QtGui import QPalette, QImage, QPixmap, QTransform
+from PyQt5.QtWidgets import QScrollArea, QLabel, QSizePolicy, QSlider, QAction, QApplication, QStyle
+from PyQt5.QtGui import QPalette, QIcon, QImage, QPixmap, QTransform
 from PyQt5.QtCore import Qt
 from .preview_base import PreviewBase
 
@@ -7,6 +7,7 @@ class ImagePreview(PreviewBase):
     def __init__(self):
         super().__init__()
         self.allowed_file_types = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'svg']
+        self._toolbar.setToolButtonStyle(Qt.ToolButtonTextUnderIcon)
 
         self.label = QLabel()
         self.label.setBackgroundRole(QPalette.Base)
@@ -32,6 +33,7 @@ class ImagePreview(PreviewBase):
         self._toolbar.addAction(self.rotate_right_button)
 
         self.save_changes_button = QAction("Save", self)
+        self.save_changes_button.setIcon(QIcon(QApplication.style().standardIcon(QStyle.SP_DialogSaveButton)))
         self.save_changes_button.triggered.connect(lambda: self.label.pixmap().save(self.get_file_full_path()))
         self._toolbar.addAction(self.save_changes_button)
 
