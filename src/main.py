@@ -9,6 +9,7 @@ from preview import Preview
 from components.text_preview import TextPreview
 from components.word_preview import WordPreview
 from components.image_preview import ImagePreview
+from components.sqlite_preview import SqlitePreview
 from ui.settings import SettingsWindow
 from ui.changedir import ChangeDirWindow
 from ui.find import FindWindow
@@ -33,6 +34,7 @@ class Gui(QMainWindow):
         self.preview.register_preview(TextPreview())
         self.preview.register_preview(WordPreview())
         self.preview.register_preview(ImagePreview())
+        self.preview.register_preview(SqlitePreview())
 
         if QSettings("pancake", "app").contains('opened_panes_on_startup'):
             for i in range(QSettings("pancake", "app").value('opened_panes_on_startup')):
