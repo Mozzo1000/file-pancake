@@ -6,7 +6,7 @@ from .preview_base import PreviewBase
 class ImagePreview(PreviewBase):
     def __init__(self):
         super().__init__()
-        self.allowed_file_types = ['png', 'jpg', 'jpeg', 'bmp', 'gif']
+        self.allowed_file_types = ['png', 'jpg', 'jpeg', 'bmp', 'gif', 'svg']
 
         self.label = QLabel()
         self.label.setBackgroundRole(QPalette.Base)
